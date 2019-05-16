@@ -1,0 +1,158 @@
+spek : 
+1. msi gl62 7rdx
+Laptop gaming dengan layar 15.6" yang memiliki prosesor Core i7,
+penyimpanan memori yang cepat, memori pendukung DDR4-2400 terbaru yang akan membuat performa game lebih cepat.
+Spesifikasi : 
+-Layar : 15,6 inches
+-OS : Windows 10
+-Ram : 32gb DDR4
+-Prosesor : Intel Core i7
+-Graphic Card : GeForce GTX 1050 with 2GB GDDR5
+-HDD : 1Tb.
+price : 12.999.000
+
+2. msi gl62m 7rex
+Laptop gaming dengan layar 15.6" yang memiliki prosesor Core i7, grafis GeForce GTX 1050 Ti,
+penyimpanan memori yang cepat, memori pendukung DDR4-2400 terbaru yang akan membuat performa game lebih cepat.
+Spesifikasi : 
+-Layar : 15,6 inches
+-OS : Windows 10
+-Ram : 32gb DDR4
+-Prosesor : Intel Core i7
+-Graphic Card : GeForce GTX 1050 with 2GB GDDR5
+-HDD : 1Tb.
+-SSD : 128gb.
+price : 14.999.000
+
+3. asus rog strix gl503
+A 15.6-inch Anti-Glare, wide-view display gaming laptop powered by Core i5/Core i7 processor coupled with Intel HM175 and GeForce GTX GPU.
+Spesifikasi :
+-Layar : 15,6 inches
+-OS : windows 10
+-Ram : 32gb DDR4
+-Prosesor : Intel core i7
+-Graphic Card : Nvidia with 3gb GDDR5 VRAM GeForce GTX 1060
+-HDD : 1Tb
+-SSD : 128gb
+price : 13.999.000
+
+4. asus rog  gl552jx
+Notebook yang cocok untuk pecinta game yang didukung prosesor Intel Core i7 dan grafis NVIDIA GeForce GTX mendukung kreatifas kebutuhan game Anda.
+Spesifikasi :
+-Layar : 15,6 inches
+-OS : Windows 10
+-Ram : 16gb DDR3
+-Prosesor : Intel core i7
+-Graphic Card : Nvidia GeForce GTX 950M
+-HDD : 1Tb
+price : 10.000.000
+
+5. acer aspire v5-132
+Ditenagai dengan prosesor Intel Dual Core generasi ketiga dengan tingkat konsumsi energi yang rendah.
+Spesifikasi :
+-Layar : 11,6 inches
+-OS : windows 8
+-Ram : 2gb ddr3
+-Prosesor : Celeron dual core
+-Graphic Card : Intel HD Graphics
+-HDD : 500gb
+price : 3.599.000
+
+6. acer nitro 5
+Notebook Acer 15.6" yang cocok digunakan untuk casual gamer, ditenagai prosesor Intel Core i7 gen ke-7 atau AMD FX-series,
+serta model GPU NVIDIA GeForce GTX 1050/1050 Ti AMD Radeon RX550, dibekali RAM 8GB hingga 32GB dan HDD 1TB, SSD 128GB.
+Spesifikasi : 
+-Layar : 15,6 inches
+-OS : Windows 10
+-Ram : 8gb DDR4
+-Prosesor : Amd
+-Graphic Card : GeForce GTX 1050 Ti 
+-HDD : 1Tb.
+-SSD : 128gb.
+price : 7.999.000
+
+7. sony vaio pro svp
+Vaio Pro 13 Series delivers a Full HD with 10 point touchscreen, and a sleek design.
+With Intel® Core™ i5-4200U Processor 1.60 GHz with Turbo Boost up to 2.60 GHz.
+Spesifikasi :
+-Layar : 13,3 inches
+-OS : Windows 8
+-Ram : 4gb ddr
+-Prosesor : Intel core i5
+-Graphic Card : Intel HD graphics 4400
+-HDD : 1Tb
+-SSD : 128gb.
+price : 12.999.000
+
+8. hp pavilion
+A hybrid, 2 in 1 tablet laptop, with 11.6inch(1366 x 768) 360-degree hinge for ultimate flexibility.
+Spesifikasi :
+-Layar : 11,6 inches
+-OS : Windows 10
+-Ram : 8gb ddr3
+-Prosesor : Intel i5
+-Graphic Card : Intel HD Graphics
+-HDD : 500gb.
+price : 5.000.000
+
+9. Razer Abyssus
+Gaming Mouse, 5.000 dpi, Optical, USB
+LED, Black.
+Spesifikasi :
+-DPI : 5.000 dpi
+-Sensor : Optical
+-Wired
+-Color : Black
+-Weight : 80g
+
+10. Razer Deathadder Elite
+Gaming Mouse, 16000 dpi, Optical, USB
+RGB LED, Black
+Spesifikasi :
+-DPI : 16.000 dpi
+-Sensor : Optical
+-Mouse Backlighting : RGB
+-Wired
+-Color : Black
+-Weight : 105g
+
+11. Razer Mamba Tournament 
+Gaming Mouse, 16.000 dpi, 5G Laser, USB
+RGB LED, Black
+Spesifikasi :
+-DPI : 16.000 dpi
+-Sensor : 5G laser
+-Mouse Backlighting : RGB
+-Wired
+-Color : Black
+-Weight : 133g
+
+12. Steel Series Rival Black
+Gaming Mouse, 200 - 7,200, 100 CPI Increments, Optical, USB
+RGB LED, Black
+Spesifikasi :
+-DPI : 200 - 7200 dpi
+-Sensor : Optical
+-Mouse Backlighting : RGB
+-Wired
+-Color : Black
+-Weight : 87.5g
+
+13. Steel Series Kinzu V3
+Gaming Mouse, 2000 dpi, Optical, USB, Black.
+Spesifikasi :
+-DPI : 2000 dpi
+-Sensor : Optical
+-Wired
+-Color : Black
+-Weight : 77g
+
+14. Steel Series Sensei 310
+Gaming Mouse, 100-12000, 100 CPI Increments, Optical, USB
+RGB LED, Black
+-DPI : 200 - 12000 dpi
+-Sensor : Optical
+-Mouse Backlighting : RGB
+-Wired
+-Color : Black
+-Weight : 92.1g

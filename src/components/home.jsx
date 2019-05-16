@@ -1,14 +1,26 @@
-import React from 'react'
+import React from 'react';
+import {connect} from 'react-redux';
+import Brands from './Brands';
+import Carousel from './Carousel';
 
 
 class Home extends React.Component{
     render(){
         return(
-            <div className="container">
-               Ini Home
+            <div>
+              <Carousel />  
+              <Brands />
+              {this.props.id}
             </div>
         )
     }
 }
 
-export default Home
+const mapStateToProps = (state) => {
+    return {
+        id : state.user.id,
+        role : state.user.role
+    }
+}
+
+export default connect(mapStateToProps)(Home)

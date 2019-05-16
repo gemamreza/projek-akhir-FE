@@ -1,0 +1,42 @@
+.footer {
+    background-color: rgba(207, 201, 201, 0.3);
+    text-align: center;
+    font-family: 'Raleway';
+    padding: 15px;
+    font-size: 15px;
+    height: 200px;
+    width: 100%;
+    position: relative;
+    bottom: 0 !important;
+}
+
+hr {
+    width: 100%;
+    height: 2.5px;
+    background-color:black;
+    margin-right: auto;
+    margin-left: auto;
+    margin-top: 2px;
+    margin-bottom: 5px;
+    border-width: 5px;
+    border-color: black;
+}
+
+.logout {
+    cursor: pointer;
+}
+
+.mytable {
+    -webkit-box-shadow: 4px 4px 16px 0px rgba(0,0,0,0.75);
+    -moz-box-shadow: 4px 4px 16px 0px rgba(0,0,0,0.75);
+    box-shadow: 4px 4px 16px 0px rgba(0,0,0,0.75);
+}
+
+.panel {
+    border-style: solid;
+    padding-bottom: 20px;
+    padding-right: 20px;
+    padding-left: 20px;
+    padding-top: 20px;
+}
+

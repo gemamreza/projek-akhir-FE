@@ -1,76 +1,141 @@
-import React from 'react'
-import { Link } from 'react-router-dom'
-import axios from 'axios'
-
+import React from 'react';
+import { Link } from 'react-router-dom';
+import {userRegister} from './../1.actions/userAction';
+import {connect} from 'react-redux';
+import {Redirect} from 'react-router-dom';
 
 class Register extends React.Component{
-    state = {error : ''}
-    onBtnRegister = () => {
-        if(this.refs.username.value || this.refs.password.value || this.refs.email.value){
-            var newData = {
-                username : this.refs.username.value,
-                password : this.refs.password.value,
-                email : this.refs.email.value,
-            }
-            axios.post('http://localhost:5000/auth/register',newData)
-            .then((res) => alert(res.data))
-            .catch((err) => console.log(err))
+    state = {error : '', msg : ''}
 
-        }else{
-            this.setState({error : 'semua form harus diisi'})
+    onBtnSignUp = () => {
+        var namadepan = this.refs.namadepan.value
+        var namabelakang = this.refs.namabelakang.value
+        var username = this.refs.username.value 
+        var password = this.refs.password.value
+        var repassword = this.refs.repassword.value
+        var email = this.refs.email.value
+        var phone = this.refs.phone.value
+
+        if(namadepan === '' || namabelakang === '' || username === '' || password === '' ||
+           repassword === '' || email === '' || phone === '') {
+               this.setState({error : 'semua form harus ter-isi'})
+        } else if(password !== repassword) {
+                this.setState({error : 'confirm password tidak sama'})
+        } else {
+            this.props.userRegister(namadepan, namabelakang, username, password, email, phone)
+            this.setState({msg:'Thankyou for register, check your email to verify your accout'})
+
+            // this.refs.namadepan.value = ''
+            // this.refs.namabelakang.value = ''
+            // this.refs.username.value = ''
+            // this.refs.password.value = ''
+            // this.refs.repassword.value = ''
+            // this.refs.email.value = ''
+            // this.refs.phone.value = ''
         }
-      
+    }
 
-        
+    renderMessage = () => {
+        if(this.props.error !== ""){
+            return <div class="alert alert-danger mt-3" role="alert">
+                        {this.props.error}
+                    </div>
+        } else if(this.state.msg !==''){
+            return <div className="alert alert-success mt-3" role="alert">
+                        {this.state.msg}
+                    </div>
+        } else if(this.state.error!==''){
+            return <div className="alert alert-danger mt-3" role="alert">
+                        {this.state.error}
+                    </div>
+        }
     }
 
     render(){
+        if(this.props.username){
+            return <Redirect to='/' />
+        }
         return(
-            <div className="container myBody " style={{minHeight:"600px"}}>
-                    <div className="row justify-content-sm-center ml-auto mr-auto mt-3">
+            <div className="container myBody" style={{minHeight:"600px"}}>
+            <div className="row justify-content-sm-center ml-auto mr-auto mt-3">
+                <form className="border mb-3" style={{padding:"20px", borderRadius:"5%"}} ref="formLogin">
+                    <fieldset>
                         
-                        <form className="border mb-3" style={{padding:"20px", borderRadius:"5%"}} ref="formLogin">
-                            <fieldset>
-                                
-                                <div className="form-group row">
-                                    <label className="col-sm-3 col-form-label">Username</label>
-                                    <div className="col-sm-9">
-                                    <input type="text" ref="username" className="form-control" id="inputUsername" placeholder="Username" required autoFocus/>
-                                    </div>
-                                </div>
+                        <div className="form-group row">
+                            <label className="col-sm-3 col-form-label">Nama Depan</label>
+                            <div className="col-sm-9">
+                            <input type="text" ref="namadepan" className="form-control" id="inputNamaDepan" placeholder="Nama Depan" required autoFocus/>
+                            </div>
+                        </div>
 
-                                <div className="form-group row">
-                                    <label className="col-sm-3 col-form-label">Password</label>
-                                    <div className="col-sm-9">
-                                    <input type="password" ref="password" className="form-control" id="inputPassword" placeholder="Password" required />
-                                    </div>
-                                </div>
+                        <div className="form-group row">
+                            <label className="col-sm-3 col-form-label">Nama Belakang</label>
+                            <div className="col-sm-9">
+                            <input type="text" ref="namabelakang" className="form-control" id="inputNamaBelakang" placeholder="Nama Belakang" required autoFocus/>
+                            </div>
+                        </div>
 
-                                <div className="form-group row">
-                                    <label className="col-sm-3 col-form-label">Email</label>
-                                    <div className="col-sm-9">
-                                    <input type="email" ref="email" className="form-control" id="inputEmail" placeholder="Email@mail.com" required />
-                                    </div>
-                                </div>
-                                
-                                <div className="form-group row">
-                                    <div className="col-12">
-                                    <button type="button"  onClick={this.onBtnRegister}   className="btn btn-primary" style={{width:"300px"}} ><i className="fas fa-sign-in-alt" /> Sign Up!</button>
-                                   { this.state.error ?  <div class="alert alert-danger mt-3" role="alert">
-                                     {this.state.error}
-                                    </div>   : null    }
-                                    </div>
-                                        
-                                </div>
-                                <div className="btn my-auto"><p>Already have Account? <Link to="/login" className="border-bottom">Login</Link></p></div>
-                                
-                            </fieldset>
-                        </form>
+                        <div className="form-group row">
+                            <label className="col-sm-3 col-form-label">Username</label>
+                            <div className="col-sm-9">
+                            <input type="text" ref="username" className="form-control" id="inputUsername" placeholder="Username" required autoFocus/>
+                            </div>
+                        </div>
+
+                        <div className="form-group row">
+                            <label className="col-sm-3 col-form-label">Password</label>
+                            <div className="col-sm-9">
+                            <input type="password" ref="password" className="form-control" id="inputPassword" placeholder="Password" required />
+                            </div>
+                        </div>
+
+                        <div className="form-group row">
+                            <label className="col-sm-3 col-form-label">Retype-Password</label>
+                            <div className="col-sm-9">
+                            <input type="password" ref="repassword" className="form-control" id="inputRePassword" placeholder="Retype-Password" required />
+                            </div>
+                        </div>
+
+                        <div className="form-group row">
+                            <label className="col-sm-3 col-form-label">Email</label>
+                            <div className="col-sm-9">
+                            <input type="email" ref="email" className="form-control" id="inputEmail" placeholder="Email@mail.com" required />
+                            </div>
+                        </div>
+
+                        <div className="form-group row">
+                            <label className="col-sm-3 col-form-label">Phone</label>
+                            <div className="col-sm-9">
+                            <input type="phone" ref="phone" className="form-control" id="inputPhone" placeholder="Ex: 0857xxxxxxxx" required />
+                            </div>
+                        </div>
                         
-                    </div>                
-                </div>
+                        <div className="form-group row">
+                            <div className="col-12">
+                            <center>
+                            <div> <button type="button" className='btn btn-primary mt-2' onClick={this.onBtnSignUp} style={{width:"300px"}} > Sign Up </button> </div>
+                            {/* <div> <button type="button" className='btn btn-primary mt-2' onClick={this.loginWithGoogle} style={{width:"300px"}} > Login With Google</button> </div> */}
+                            </center>
+                            {this.renderMessage()}
+                            </div>     
+                        </div>
+                        <div className="btn my-auto"><p>Already have Account? <Link to="/login" className="border-bottom">Login</Link></p></div>
+                        
+                    </fieldset>
+                </form>
+                    
+                </div>                
+            </div>
         )
     }
 }
 
-export default Register
+const mapStateToProps = (state) => {
+    return{
+        error : state.user.error,
+        msg : state.user.msg,
+        username : state.user.username
+    }
+}
+
+export default connect (mapStateToProps,{userRegister})(Register)
