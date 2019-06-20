@@ -10,7 +10,6 @@ class Home extends React.Component{
             <div>
               <Carousel />  
               <Brands />
-              {this.props.id}
             </div>
         )
     }

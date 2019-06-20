@@ -1,18 +1,5 @@
 const INITIAL_STATE = {id : 0, username :'', role : "", cookie : false, loading : false, error : "", msg : ""}
 
-// export default (state = INITIAL_STATE, action) => {
-//     switch(action.type){
-//         case 'LOGIN_SUCCESS_USERNAME' :
-//             return {...INITIAL_STATE, id : action.payload, username : action.payload, role : action.payload, cookie : true}
-//         case 'RESET_USER' :
-//             return {...INITIAL_STATE, cookie : true}
-//         case 'COOKIE_TRUE' :
-//             return {...INITIAL_STATE, cookie : true}
-//         default :
-//             return state
-//     } 
-// }
-
 export default (state=INITIAL_STATE, action)=>{
     if(action.type==='LOADING'){
         return {...INITIAL_STATE, loading: true , cookie : true} 
@@ -27,7 +14,7 @@ export default (state=INITIAL_STATE, action)=>{
     }else if(action.type==='RESET_USER'){
         return {...INITIAL_STATE, cookie: true}
     }else if(action.type==='USERNAME_NOT_AVAILABLE'){
-        return {...INITIAL_STATE, cookie : true,error:'Username already exist'}
+        return {...INITIAL_STATE, cookie : true,error:'Username Has Been Taken!'}
     }else if(action.type==='REGISTER_SUCCESS'){
         return {...INITIAL_STATE, msg : action.payload,cookie : true}
     }else if(action.type==='COOKIE_TRUE'){

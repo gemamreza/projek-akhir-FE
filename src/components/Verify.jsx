@@ -1,6 +1,7 @@
 import React from 'react';
 import queryString from 'query-string';
 import Axios from 'axios';
+import sweet from 'sweetalert';
 
 
 class Verify extends React.Component{
@@ -15,7 +16,7 @@ class Verify extends React.Component{
             username : params.username,
             password : params.password
         })
-        .then((res) => alert(res.data))
+        .then((res) => sweet('Success',res.data,'success'))
         .catch((err) => console.log(err))
     }
 
@@ -23,7 +24,7 @@ class Verify extends React.Component{
         return(
             <div className="container">
                <center><h1>Email Berhasil di konfirmasi, silakan login kembali</h1></center>
-               <img src="https://highlight.id/wp-content/uploads/2018/11/Highlight_merek-brand-distro-clothing-line-lokal-fashion-indonesia-keren-bagus-koleksi-terbaru_48-640x384.jpg"
+               <img src="https://startuppekanbaru.org/wp-content/uploads/2018/02/12.jpg"
                 style={{width:"100%", height:"350px"}} alt="banner" />
             </div>
         )

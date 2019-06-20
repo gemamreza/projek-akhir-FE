@@ -2,33 +2,35 @@ import React from 'react'
 import { Link, Redirect} from 'react-router-dom'
 import {connect} from 'react-redux';
 import {LoginAction, cartCount} from '../1.actions';
-
+import Loader from 'react-loader-spinner';
+import './../support/style.css';
+import Button from '@material-ui/core/Button';
 
 class Login extends React.Component{
 
     componentWillReceiveProps(newProps){
-        console.log(newProps)
         if(newProps.username !== ""){
             this.props.cartCount(newProps.username)        
-        //Cookie.set('userData',newProps.username,{path :'/'})
+        }
+    }
+
+    renderBtnOrLoading = () => {
+        if(this.props.loading === true){
+            return <Loader
+                    type="Bars"
+                    color="#00BFFF"
+                    height="50"	
+                    width="50"
+                    />
+        }else{
+            return <Button color="primary" variant="contained" onClick={this.onBtnLoginClick} style={{width:"300px"}} ><i className="fas fa-sign-in-alt mr-2" /> Sign In</Button>
         }
     }
     
     onBtnLoginClick = () => {
         var username = this.refs.username.value
         var password = this.refs.password.value
-        // Axios.post('http://localhost:2000/user/login', {username, password})
-        // .then((res) => {
-        //     if(res.data === 'Username atau Password tidak cocok!')
-        //     {
-        //         alert(res.data) 
-        //     } else {
-            //this.props.LoginAction(res.data[0].username)
-            this.props.LoginAction(username, password)
-        //     }
-        // })
-        // .catch((err) => console.log(err))
-
+        this.props.LoginAction(username, password)
     }
 
     renderErrorMessage = () => {
@@ -46,9 +48,9 @@ class Login extends React.Component{
         }
         return(
             <div className="container myBody" style={{minHeight:"350px"}}>
-                <div className="row justify-content-sm-center ml-auto mr-auto mt-3" >
+                <div className="row justify-content-sm-center ml-auto mr-auto mt-3 " >
                     
-                    <form className="border mb-3" style={{padding:"20px", borderRadius:"5%"}} ref="formLogin">
+                    <form className="sign" ref="formLogin">
                         <fieldset>
                             
                             <div className="form-group row">
@@ -67,8 +69,10 @@ class Login extends React.Component{
                             
                             <div className="form-group row">
                                 <div className="col-12">
-                                 <button type="button" className="btn btn-primary" onClick={this.onBtnLoginClick} style={{width:"300px"}} ><i className="fas fa-sign-in-alt" /> Login</button>
-                                 {this.renderErrorMessage()}
+                                    <center>
+                                    {this.renderBtnOrLoading()}
+                                    {this.renderErrorMessage()}
+                                    </center>                                 
                                 </div>
                                     
                             </div>
@@ -85,7 +89,8 @@ class Login extends React.Component{
 const mapStateToProps = (state) => {
     return {
         username : state.user.username,
-        error : state.user.error
+        error : state.user.error,
+        loading : state.user.loading
     }
 }
 

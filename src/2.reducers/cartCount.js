@@ -1,4 +1,4 @@
-const INITIAL_STATE = {count : 0}
+const INITIAL_STATE = {count : 0, loading : false}
 
 export default(state = INITIAL_STATE, action) => {
     switch(action.type){
@@ -6,6 +6,8 @@ export default(state = INITIAL_STATE, action) => {
             return {count : action.payload}
         case 'RESET_COUNT':
             return INITIAL_STATE
+        case 'LOADING':
+            return {...INITIAL_STATE, loading : true}
         default:
             return state
     }

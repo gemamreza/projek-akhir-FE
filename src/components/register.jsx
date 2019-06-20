@@ -2,10 +2,27 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import {userRegister} from './../1.actions/userAction';
 import {connect} from 'react-redux';
-import {Redirect} from 'react-router-dom';
+// import {Redirect} from 'react-router-dom';
+import validator from 'validator';
+import Loader from 'react-loader-spinner';
+import './../support/style.css';
+import Button from '@material-ui/core/Button';
 
 class Register extends React.Component{
     state = {error : '', msg : ''}
+
+    renderLoadingOrBtn =() => {
+        if(this.props.loading === true){
+            return <Loader
+                    type="Rings"
+                    color="#00BFFF"
+                    height="50"	
+                    width="50"
+                    />
+        }else{
+            return <Button color="primary" variant="contained"  style={{width:"300px"}} onClick={this.onBtnSignUp} ><i className="fas fa-sign-in-alt mr-2"  /> Sign Up!</Button>
+        }
+    }
 
     onBtnSignUp = () => {
         var namadepan = this.refs.namadepan.value
@@ -18,9 +35,11 @@ class Register extends React.Component{
 
         if(namadepan === '' || namabelakang === '' || username === '' || password === '' ||
            repassword === '' || email === '' || phone === '') {
-               this.setState({error : 'semua form harus ter-isi'})
-        } else if(password !== repassword) {
-                this.setState({error : 'confirm password tidak sama'})
+               this.setState({error : 'Semua form harus ter-isi'})
+        } else if(validator.isEmail(email) === false){
+                this.setState({error : 'Email tidak valid'})
+        }else if(password !== repassword) {
+                this.setState({error : 'Password tidak match'})
         } else {
             this.props.userRegister(namadepan, namabelakang, username, password, email, phone)
             this.setState({msg:'Thankyou for register, check your email to verify your accout'})
@@ -52,13 +71,13 @@ class Register extends React.Component{
     }
 
     render(){
-        if(this.props.username){
-            return <Redirect to='/' />
-        }
+        // if(this.props.username !== ""){
+        //     return <Redirect to='/login' />
+        // }
         return(
             <div className="container myBody" style={{minHeight:"600px"}}>
             <div className="row justify-content-sm-center ml-auto mr-auto mt-3">
-                <form className="border mb-3" style={{padding:"20px", borderRadius:"5%"}} ref="formLogin">
+                <form className="sign" ref="formLogin">
                     <fieldset>
                         
                         <div className="form-group row">
@@ -106,17 +125,18 @@ class Register extends React.Component{
                         <div className="form-group row">
                             <label className="col-sm-3 col-form-label">Phone</label>
                             <div className="col-sm-9">
-                            <input type="phone" ref="phone" className="form-control" id="inputPhone" placeholder="Ex: 0857xxxxxxxx" required />
+                            <input type="number" ref="phone" className="form-control" id="inputPhone" placeholder="Ex: 0857xxxxxxxx" required />
                             </div>
                         </div>
                         
                         <div className="form-group row">
                             <div className="col-12">
                             <center>
-                            <div> <button type="button" className='btn btn-primary mt-2' onClick={this.onBtnSignUp} style={{width:"300px"}} > Sign Up </button> </div>
-                            {/* <div> <button type="button" className='btn btn-primary mt-2' onClick={this.loginWithGoogle} style={{width:"300px"}} > Login With Google</button> </div> */}
+                            <div> {this.renderLoadingOrBtn()} </div>
                             </center>
+                            <center>
                             {this.renderMessage()}
+                            </center>
                             </div>     
                         </div>
                         <div className="btn my-auto"><p>Already have Account? <Link to="/login" className="border-bottom">Login</Link></p></div>
@@ -134,7 +154,8 @@ const mapStateToProps = (state) => {
     return{
         error : state.user.error,
         msg : state.user.msg,
-        username : state.user.username
+        username : state.user.username,
+        loading : state.user.loading
     }
 }
 

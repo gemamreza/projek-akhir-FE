@@ -6,10 +6,13 @@ import FormatCurrency from 'format-currency';
 import cookie from 'universal-cookie';
 import {Link} from 'react-router-dom';
 import './../support/style.css';
+import sweet from 'sweetalert';
+import Loader from 'react-loader-spinner';
+
 const objCookie = new cookie()
    
 class Cart extends Component {
-    state = {cart : [], selectedEdit : 0}
+    state = {cart : [], selectedEdit : 0, loading : false}
 
     componentDidMount(){
         this.getCartApi()
@@ -30,7 +33,7 @@ class Cart extends Component {
         }
         Axios.put('http://localhost:2000/product/editcart/' + id, newData)
         .then((res) => {
-            alert(res.data)
+            sweet('Edit Quantity',res.data,'success')
             this.getCartApi()
             this.setState({selectedEdit : 0})
         })
@@ -40,7 +43,7 @@ class Cart extends Component {
     onBtnDelete = (id) => {
         Axios.delete('http://localhost:2000/product/deletecart/' + id )
         .then((res) => {
-            alert(res.data)
+            sweet('Delete Cart',res.data,'success')
             this.getCartApi()
             this.props.cartCount(this.props.username)
         })
@@ -63,13 +66,28 @@ class Cart extends Component {
     }
 
     onBtnCheckOut = () => {
+        this.setState({loading : true})
         Axios.post('http://localhost:2000/product/checkout', {username : this.props.username, total : this.totalBelanja()})
         .then((res) => {
-            alert(res.data)
+            sweet('Check Out Status',res.data,'success')
             this.getCartApi()
             this.props.cartCount(this.props.username)
+            this.setState({loading : false})
         })
         .catch((err) => console.log(err))
+    }
+
+    renderBtnOrLoading = () => {
+        if(this.state.loading === true){
+            return <Loader
+                    type="Rings"
+                    color="#00BFFF"
+                    height="50"	
+                    width="50"
+                    />
+        }else{
+            return <input type="button" value="Check Out" onClick={this.onBtnCheckOut} className="btn btn-warning" />
+        }
     }
 
     renderCart = () => {
@@ -83,7 +101,7 @@ class Cart extends Component {
                         <td>{val.diskon}</td>
                         <td>{val.qty}</td>
                         <td>
-                            <input type="button" value="EDIT" onClick={ () => this.setState({selectedEdit : val.id})} className="btn btn-info" />
+                            <input type="button" value="EDIT" onClick={ () => this.setState({selectedEdit : val.id})} className="btn btn-info mr-3" />
                             <input type="button" value="DELETE" onClick={ () => this.onBtnDelete(val.id)} className="btn btn-danger" />
                         </td>
                     </tr>
@@ -98,7 +116,7 @@ class Cart extends Component {
                     <td>{val.diskon}</td>
                     <td><input type="number" defaultValue={val.qty} style={{width : '5rem' }} ref="editQty" className="form-control" onChange={this.qtyValidation}/></td>
                     <td>
-                        <input type="button" value="SAVE" onClick={ () => this.onBtnSave(val.id)}  className="btn btn-success" />
+                        <input type="button" value="SAVE" onClick={ () => this.onBtnSave(val.id)}  className="btn btn-success mr-3" />
                         <input type="button" value="CANCEL" onClick={ () => this.setState({selectedEdit : 0})}  className="btn btn-danger" />
                     </td>
                 </tr>
@@ -128,7 +146,8 @@ class Cart extends Component {
                     </table>
                     <div>
                         <center>
-                                <input type="button" value="Check Out" onClick={this.onBtnCheckOut} className="btn btn-warning" />
+                                {/* <input type="button" value="Check Out" onClick={this.onBtnCheckOut} className="btn btn-warning" /> */}
+                                {this.renderBtnOrLoading()}
                         </center>
                     </div>
                 </div>
@@ -147,7 +166,8 @@ class Cart extends Component {
 const mapStateToProps = (state) => {
     return{
         username : state.user.username,
-        count : state.cart.count
+        loading : state.cart.loading,
+        count : state.cart.count   
     }
 }
 

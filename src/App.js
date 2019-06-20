@@ -14,6 +14,9 @@ import ProductDetail from './components/ProductDetail';
 import History from './components/History';
 import Cart from './components/Cart';
 import PaymentConfirmation from './components/PaymentConfirmation';
+import ManageTransaksi from './components/Admin/ManageTransaksi';
+import ManageCategory from './components/Admin/ManageCategory';
+import Order from './components/HowToOrder';
 import cookie from 'universal-cookie';
 import {keepLogin, makeCookieTrue, cartCount} from './1.actions';
 import {connect} from 'react-redux';
@@ -50,7 +53,10 @@ class App extends Component {
           <Route path='/productlist/:id' component={ProductList} exact />
           <Route path='/productdetail/:id' component={ProductDetail} exact />
           <Route path='/history' component={History} exact />
+          <Route path='/howtoorder' component={Order} exact />
           <Route path='/payment/:id' component={PaymentConfirmation} exact />
+          <Route path='/managetransaksi' component={ManageTransaksi} exact />
+          <Route path='/managecategory' component={ManageCategory} exact />
           <Route path='*' component={PageNotFound} exact/>
           </Switch>
           </ScrollToTop>
@@ -69,3 +75,4 @@ const mapStateToProps = (state) => {
 }
 
 export default withRouter(connect(mapStateToProps , {keepLogin, cartCount, makeCookieTrue})(App));
+

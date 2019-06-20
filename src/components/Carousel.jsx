@@ -8,19 +8,19 @@ import {
 
 const items = [
   {
-    src: 'https://promotions.newegg.com/FlagShip/MSI/images/banner_large_180803.png',
-    altText: 'FMLSxThanksinsomnia',
-    caption: 'FMLSxThanksinsomnia'
+    src: 'https://s3.us-east-2.amazonaws.com/image.vlcanada.com/MSI/MSI+Banner/MSI_Banner_01.jpg',
+    altText: 'Banner1',
+    caption: 'MSI'
   },
   {
     src: 'https://www.thestreamingblog.com/wp-content/uploads/2017/11/ix-hero-banner-1193x520.png',
-    altText: 'Crooz',
-    caption: 'Crooz'
+    altText: 'Banner2',
+    caption: 'ASUS'
   },
   {
     src: 'http://neptuneinfo.com/wp-content/uploads/2018/09/Hp-mobile-Workstation-banner.jpg',
-    altText: 'Thxnsmn',
-    caption: 'Thxnsmn'
+    altText: 'Banner3',
+    caption: 'HP'
   }
 ];
 

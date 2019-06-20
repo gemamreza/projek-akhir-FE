@@ -5,6 +5,7 @@ import {cartCount} from './../1.actions/cartCount';
 import {connect} from 'react-redux';
 import nl2br from 'react-nl2br';
 import FormatCurrency from 'format-currency';
+import sweet from 'sweetalert';
 
 class ProductDetail extends Component {
     state = {product : []}
@@ -35,7 +36,7 @@ class ProductDetail extends Component {
         }
         Axios.post('http://localhost:2000/product/addcart', newData)
         .then((res) => {
-            alert(res.data)
+            sweet('Add To Cart',res.data,'success')
             this.props.cartCount(this.props.username)
         })
         .catch((err) => console.log(err))
@@ -100,7 +101,7 @@ class ProductDetail extends Component {
                         </div>
 
                     </div>
-                    {this.props.username === "" 
+                    {this.props.username === "" || this.props.role === 'admin'
                     ?
                         <div className='row mt-4'>
                             <input type='button' disabled className='btn btn-success col-md-3' style={{marginLeft : "10px"}} value='Masukan Ke Keranjang' />
@@ -130,7 +131,8 @@ class ProductDetail extends Component {
 
 const mapStateToProps = (state) => {
    return{
-        username : state.user.username
+        username : state.user.username,
+        role : state.user.role
     }
 }
    

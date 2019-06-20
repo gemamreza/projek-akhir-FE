@@ -6,14 +6,20 @@ import {LoginAction} from './../../1.actions/userAction';
 import {connect} from 'react-redux';
 import './../../support/style.css';
 import PageNotFound from './../PageNotFound';
+import sweet from 'sweetalert';
+import Currency from 'format-currency';
+import { withRouter } from 'react-router-dom';
+import queryString from 'query-string';
 
 class ManageProduct extends React.Component {
     state = {product : [], category : [], selectedFile : null, error : "",
-             modal : false, dataEdit : {}, selectedFileEdit : null, edit : 0}
+             modal : false, dataEdit : {}, selectedFileEdit : null, edit : 0,
+             searchData : '', filterKategori : 999, dataPerView : 10, errorEdit : ''}
 
     componentDidMount(){
         this.getDataProduct()
         this.getCategory()
+        this.getDataUrl()
     }
 
     valueHandler = () => {
@@ -33,18 +39,6 @@ class ManageProduct extends React.Component {
         .catch((err) => console.log(err))
     }
 
-    onBtnSave = (id) => {
-        var data = {
-             category : this.refs.editCat.value
-        }
-        Axios.put('http://localhost:2000/product/editcat/' + id, data)
-        .then((res)=> {
-            alert(res.data)
-            this.getCategory()
-            this.setState({edit : 0})
-        })
-        .catch((err) => console.log(err))
-    }
 
     renderCategory = () => {
         var renderCat = this.state.category.map((val)=> {
@@ -53,37 +47,11 @@ class ManageProduct extends React.Component {
         return renderCat
     }
 
-    renderCategoryTable = () => {
-        var renderCat = this.state.category.map((val, index) => {
-            if(this.state.edit !== val.id) {
-            return (
-                <tr>
-                <td>{val.category}</td>
-                <td>
-                    <input type="button" value="X" onClick={() => this.onBtnCatDelete(val.id)} className="btn btn-danger" />
-                    <input type="button" value="E" onClick={() => this.setState({edit : val.id})} className="btn btn-info" />
-                </td>
-                </tr>
-            )
-            }       
-            return (
-                <tr>
-                <td><input type="text" ref="editCat" className="form-control" defaultValue={val.category}/></td>
-                <td>
-                    <input type="button" value="C" onClick={() => this.setState({edit : 0})} className="btn btn-danger" />
-                    <input type="button" value="S" onClick={() => this.onBtnSave(val.id)} className="btn btn-info" />
-                </td>
-                </tr>
-            )     
-        })
-        return renderCat
-    }
-
-    onBtnCatDelete = (id) => {
-        Axios.delete('http://localhost:2000/product/deletecat/' + id)
+    getProductByCat = () => {
+        var category = this.refs.getCategory.value
+        Axios.get('http://localhost:2000/product/productfilter/' + category)
         .then((res) => {
-            alert(res.data)
-            this.getCategory()
+            this.setState({product : res.data})
         })
         .catch((err) => console.log(err))
     }
@@ -103,16 +71,17 @@ class ManageProduct extends React.Component {
         if(this.refs.nama.value === '' || this.refs.kategori.value === '' ||  this.refs.deskripsi.value === '' ||
         this.refs.spesifikasi.value === '' || this.refs.harga.value === '' || this.refs.diskon.value === '' ||
         this.state.selectedFile === null ){
-            alert('Jangan Ada Data yang Kosong!')
+            sweet('Warning','Jangan Ada Data yang Kosong!','error')
         } else {
             Axios.post('http://localhost:2000/product/addproduct' , fd)
             .then((res) => {
             if(res.data.error){
             this.setState({error : res.data.msg})
             }else{
-            alert(res.data)
+            sweet('Add Product',res.data,'success')
             this.getDataProduct()
             this.refs.nama.value = ''
+            this.refs.kategori.value = ''
             this.refs.deskripsi.value = ''
             this.refs.spesifikasi.value = ''
             this.refs.harga.value = ''
@@ -132,31 +101,65 @@ class ManageProduct extends React.Component {
         .catch((err) => console.log(err))
     }
 
-    addCatBtnClick = () => {
-        var data = {
-            category :  this.refs.tambahKategori.value
+    getDataUrl = () => {
+        var obj = queryString.parse(this.props.location.search)
+        if(obj.nama){
+            this.setState({searchData : obj.nama})
         }
-       Axios.post('http://localhost:2000/product/addcategory', data)
-       .then((res) => {
-            alert(res.data)
-            this.getCategory()
-            this.refs.tambahKategori.value = ''
-       })
-       .catch((err) => console.log(err))
+        if(obj.category){
+            this.setState({filterKategori : obj.category})
+        }
+    }
+
+    pushUrl = () => {
+        var newLink = '/manage'
+        var params = []
+        if(this.refs.searchNama.value){
+            params.push({
+                params : 'nama',
+                value : this.refs.searchNama.value
+            })
+        }
+        if(this.refs.getCategory.value <= 3){
+            params.push({
+                params : 'category',
+                value : this.refs.getCategory.value
+            })
+        }
+        
+        for(var i = 0; i < params.length; i++){
+            if(i === 0){
+                newLink += '?' + params[i].params +'=' + params[i].value
+            } else  {
+                newLink += '&' + params[i].params + '=' + params[i].value
+            }
+        }
+        this.props.history.push(newLink)
+    }
+
+    onBtnFind = () => {
+        this.pushUrl()
+        var search = this.refs.searchNama.value
+        this.setState({searchData : search.toLowerCase()})
     }
 
     renderProduct = () => {
-        var renderProduct = this.state.product.map((val, index)=>{
+        var arrFilter = this.state.product.filter((val)=> {
+            return (val.nama.toLowerCase().startsWith(this.state.searchData)) // eslint-disable-next-line
+            && (val.id_kategori == this.state.filterKategori || this.state.filterKategori > 4)
+        })
+
+        var data = arrFilter.slice(0, this.state.dataPerView)
+        var renderProduct = data.map((val, index)=>{
             return (
                 <tr>
                     <td>{index+1}</td>
-                    <td>{val.id}</td>
                     <td>{val.nama}</td>
-                    <td>{val.id_kategori === 1 ? <p>Notebook</p> : val.id_kategori === 2 ? <p>Gaming Notebook</p> :
-                        val.id_kategori === 3 ? <p>Mouse</p> : null }</td>
+                    <td>{val.id_kategori}</td>
+                    <td>{val.category}</td>
                     <td>{val.deskripsi}</td>
                     <td>{nl2br(val.spesifikasi)}</td>
-                    <td>{val.harga}</td>
+                    <td>Rp.{Currency(val.harga)}</td>
                     <td>{val.diskon}</td>
                     <td><img src = {'http://localhost:2000/' + val.img} 
                          width = '50px' alt='product' /></td>
@@ -173,14 +176,14 @@ class ManageProduct extends React.Component {
     onChangeHandlerEdit = (event) => {
         // UNTUK NGE GET VALUE FILES
         this.setState({selectedFileEdit : event.target.files[0]})
-      }
+    }
     
-      valueHandlerEdit =() => {
-        var value = this.state.selectedFileEdit ? this.state.selectedFileEdit.name : 'Pick A Picture'
-        return value 
-      }
+    valueHandlerEdit =() => {
+    var value = this.state.selectedFileEdit ? this.state.selectedFileEdit.name : 'Pick A Picture'
+    return value 
+    }
     
-      onSaveBtnClick = () => {
+    onSaveBtnClick = () => {
         var newData = {
           nama : this.refs.namaEdit.value ? this.refs.namaEdit.value : this.state.dataEdit.nama,
           id_kategori : this.refs.kategoriEdit.value ? this.refs.kategoriEdit.value : this.state.dataEdit.id_kategori,
@@ -198,104 +201,127 @@ class ManageProduct extends React.Component {
           fd.append('imageBefore' , this.state.dataEdit.img)
           Axios.put('http://localhost:2000/product/editproduct/' + this.state.dataEdit.id , fd)
           .then((res) => {
-            alert(res.data)
-            this.setState({modal : false})
+            if(res.data.error){
+                this.setState({error : res.data.msg})
+            } else {
+            sweet('Edit Product',res.data,'success')
+            this.setState({modal : false, error : '', selectedFileEdit : null})
             this.getDataProduct()
+            }
           })
         }else{
           Axios.put('http://localhost:2000/product/editproduct/' + this.state.dataEdit.id , newData)
           .then((res) => {
-            alert(res.data)
-            this.setState({modal : false})
-            this.getDataProduct()
+            if(res.data.error){
+                this.setState({error : res.data.msg})
+            } else {
+                sweet('Edit Product',res.data,'success')
+                this.setState({modal : false, error :'', selectedFileEdit : null})
+                this.getDataProduct()
+            }
           })
         }
-      }
+    }
 
-      onBtnDelete=(val)=>{
-        Axios.delete('http://localhost:2000/product/delete/'+val.id, {data:val})
-        .then((res)=>{
-          // alert(res.data)
-          if(typeof(res.data)==='string'){
-            alert(res.data)
-          }
-          else{
-            alert('delete data berhasil')
-            this.setState({product : res.data})
-          }
-        })
-        .catch((err)=>console.log(err))
-      }
+    onBtnDelete=(val)=>{
+    Axios.delete('http://localhost:2000/product/delete/'+val.id, {data:val})
+    .then((res)=>{
+        // alert(res.data)
+        if(typeof(res.data)==='string'){
+        sweet('Warning',res.data,'danger')
+        }
+        else{
+        sweet('Info','Delete data berhasil','success')
+        this.setState({product : res.data})
+        }
+    })
+    .catch((err)=>console.log(err))
+    }
+
+    renderErrorMessage = () => {
+        if(this.state.error !== ""){
+            return <div class="alert alert-danger mt-3" role="alert">
+                        {this.state.error}
+                    </div>
+        }
+    }
     
     render() {
         if(this.props.role === 'admin')
         {
         return (
-            <div className="container">
+            
+            <div style={{paddingLeft : '50px', paddingRight : '50px'}}>
                 <div className="row">
                 <div className="col-md-3 mb-4">
                     <div className="card">
                         <div className="card-body">
                         <h3 className="text-center default-text py-3"><i class="fas fa-plus-square"></i> Add Product</h3>
                         <div className="md-form">
-                            <input type="text" className="form-control" ref="nama" />
                             <label htmlFor="defaultForm-email">Product Name</label>
+                            <input type="text" className="form-control" ref="nama" />
                         </div>
                         <div className="col-md-form">
+                        <label htmlFor="defaultForm-email">Choose Category</label>
                         <select className="form-control" ref="kategori">
-                            <option>Pilih Kategori</option>
+                            <option value={1}>Pilih Kategori</option>
                             {this.renderCategory()}
                         </select>
-                        <label htmlFor="defaultForm-email">Choose Category</label>
                         </div>
                         <div className="md-form">
-                            <textarea className="form-control" placeholder="Deskripsi Produk" ref="deskripsi" />
                             <label htmlFor="defaultForm-pass">Description</label>
+                            <textarea className="form-control" placeholder="Deskripsi Produk" ref="deskripsi" />
                         </div>
                         <div className="md-form">
-                            <textarea className="form-control" placeholder="Spesifikasi Produk" ref="spesifikasi" />
                             <label htmlFor="defaultForm-pass">Spesification</label>
+                            <textarea className="form-control" placeholder="Spesifikasi Produk" ref="spesifikasi" />
                         </div>
                         <div className="md-form">
-                            <input type="number" className="form-control" placeholder="Harga Produk" ref="harga" />
                             <label htmlFor="defaultForm-pass">Price</label>
+                            <input type="number" className="form-control" placeholder="Harga Produk" ref="harga" /> 
                         </div>
                         <div className="md-form">
-                            <input type="number" className="form-control" placeholder="Diskon" ref="diskon" />
                             <label htmlFor="defaultForm-pass">Discount</label>
+                            <input type="number" className="form-control" placeholder="Diskon" ref="diskon" />
                         </div>
                         <div className="md-form">
+                            <label htmlFor="defaultForm-pass">Insert Picture</label>
                             <input style={{display :'none'}} ref='input' type='file' onChange={this.onChangeHandler}/>
                             <input className='form-control btn-success' onClick={() => this.refs.input.click()} type='button' value={this.valueHandler()}/>
                         </div>
                         <div className="text-center mt-3">
                             <input type="button" value="ADD" className="btn btn-primary" onClick={this.onBtnAddProduct} />
                         </div>
-                        {this.state.error}
+                        {this.renderErrorMessage()}
                         </div>
                     </div>
-
-                    {/* Insert Category */}
-                    <hr style={{marginTop : '10px', marginBottom: '10px'}}/>
-                    <div className="md-form mt-3">
-                        <table className="table">
-                            <tr>
-                                <td>Kategori</td>
-                                <td>ACT</td>
-                            </tr>
-                            {this.renderCategoryTable()}
-                        </table>
-                        <input type="text" className="form-control" ref="tambahKategori" placeholder="Kategori" />
-                        <center><input type="button" value="ADD" className="btn btn-primary mt-2" onClick={this.addCatBtnClick} /></center>
-                    </div>
                 </div>
+
+                
                 <div className="col-md-9">
-                <center><h1>Product Table</h1></center>
-                <table className="table mt-3">
+                <div className="row">
+                <div className="col-md-4">
+                    <h1>Product Table</h1>
+                </div>
+                <div className="row justify-content-end">
+                <div className="col-md-5 md-form mt-2 mr-5" style={{display:'flex'}}>
+                    <select className="form-control" style={{width : '15rem'}}
+                        onChange={() =>{
+                        this.pushUrl()
+                        this.setState({filterKategori : this.refs.getCategory.value})}} ref='getCategory'>
+                            <option value={999}>ALL</option>
+                            {this.renderCategory()}
+                    </select>
+                    <input type="text" className="form-control ml-3 mr-2" ref='searchNama' placeholder="Search by Name" style={{width : '15rem'}} />
+                    <i class="fas fa-search mt-2 pointer" onClick={this.onBtnFind} style={{fontSize : '20px'}}></i>
+                </div>
+                </div>
+                
+                <table className="table mt-3 ">
                     <tr>
                         <td>No.</td>
-                        <td>ID</td>
                         <td>Nama</td>
+                        <td>ID.K</td>
                         <td>Kategori</td>
                         <td>Deskripsi</td>
                         <td>Spesifikasi</td>
@@ -305,11 +331,22 @@ class ManageProduct extends React.Component {
                         <td>ACT</td>
                     </tr>
                     {this.renderProduct()}
+                    <tr>
+                        <td colspan='10'>
+                            {
+                                this.renderProduct().length < 10 ?
+                                <center><p>End Of List </p></center> : this.renderProduct().length >= 10 ?
+                                <center><p onClick={ () => this.setState({ dataPerView : this.state.dataPerView+10 })} style={{fontStyle:"italic", cursor:"pointer"}}> View More</p></center> :
+                                null
+                            }
+                        </td>
+                    </tr>
                 </table>
                 </div>
-            </div>
+                </div>
+                </div>
 
-                                         {/* =================== MODAL EDIT =======================*/}
+                                            {/* =================== MODAL EDIT =======================*/}
                 <div>
                 <Modal isOpen={this.state.modal} toggle={() => this.setState({modal:false})} className={this.props.className}>
                     <ModalHeader toggle={() => this.setState({modal:false})}>Edit Product : {this.state.dataEdit.nama}</ModalHeader>
@@ -318,31 +355,31 @@ class ManageProduct extends React.Component {
                         <div className="card">
                         <div className="card-body">
                         <div className="md-form">
-                            <input type="text" className="form-control" ref="namaEdit" placeholder={this.state.dataEdit.nama} />
                             <label htmlFor="defaultForm-email">Product Name</label>
+                            <input type="text" className="form-control" ref="namaEdit" defaultValue={this.state.dataEdit.nama} />
                         </div>
                         <div className="col-md-form">
-                        <select className="form-control" ref="kategoriEdit" placeholder={this.state.dataEdit.id_kategori}>
-                            <option>Pilih Kategori</option>
+                        <label htmlFor="defaultForm-email">Choose Category</label>
+                        <select className="form-control" ref="kategoriEdit">
+                            <option>{this.state.dataEdit.id_kategori}</option>
                             {this.renderCategory()}
                         </select>
-                        <label htmlFor="defaultForm-email">Choose Category</label>
                         </div>
                         <div className="md-form">
-                            <textarea className="form-control" placeholder={this.state.dataEdit.deskripsi} ref="deskripsiEdit" />
                             <label htmlFor="defaultForm-pass">Description</label>
+                            <textarea className="form-control" defaultValue={this.state.dataEdit.deskripsi} ref="deskripsiEdit" />
                         </div>
                         <div className="md-form">
-                            <textarea className="form-control" placeholder={this.state.dataEdit.spesifikasi} ref="spesifikasiEdit" />
                             <label htmlFor="defaultForm-pass">Spesification</label>
+                            <textarea className="form-control" defaultValue={this.state.dataEdit.spesifikasi} ref="spesifikasiEdit" />
                         </div>
                         <div className="md-form">
-                            <input type="number" className="form-control" placeholder={this.state.dataEdit.harga} ref="hargaEdit" />
                             <label htmlFor="defaultForm-pass">Price</label>
+                            <input type="number" className="form-control" defaultValue={this.state.dataEdit.harga} ref="hargaEdit" />
                         </div>
                         <div className="md-form">
-                            <input type="number" className="form-control" placeholder={this.state.dataEdit.diskon}ref="diskonEdit" />
                             <label htmlFor="defaultForm-pass">Discount</label>
+                            <input type="number" className="form-control" defaultValue={this.state.dataEdit.diskon}ref="diskonEdit" />
                         </div>
                         <div className="md-form">
                                 <img src={'http://localhost:2000/' + this.state.dataEdit.img} width='100%' alt='broken' />
@@ -354,9 +391,10 @@ class ManageProduct extends React.Component {
                         </div>
                     </div>
                     </ModalBody>
+                    <center>{this.renderErrorMessage()}</center>
                     <ModalFooter>
-                    <Button color="primary" onClick={this.onSaveBtnClick}>Save</Button>{' '}
-                    <Button color="secondary" onClick={() => this.setState({modal:false})}>Cancel</Button>
+                    <Button color="primary" onClick={this.onSaveBtnClick}>Save</Button>
+                    <Button color="secondary" onClick={() => this.setState({modal:false, error : '', selectedFileEdit : null, selectedFile : null})}>Cancel</Button>
                     </ModalFooter>
                 </Modal>
                 </div>
@@ -371,4 +409,4 @@ const mapStateToProps = (state) => {
         role : state.user.role
     }
 }
-export default connect(mapStateToProps,{LoginAction})(ManageProduct);
+export default connect(mapStateToProps,{LoginAction}) (withRouter(ManageProduct));

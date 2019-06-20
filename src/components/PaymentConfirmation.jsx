@@ -4,6 +4,7 @@ import {Link} from 'react-router-dom';
 import {connect} from 'react-redux';
 import './../support/style.css';
 import PageNotFound from './PageNotFound';
+import sweet from 'sweetalert';
 
 class PaymentConfirmation extends Component {
     state = {selectedFile : null, error : ""}
@@ -22,16 +23,24 @@ class PaymentConfirmation extends Component {
         var fd = new FormData()
         fd.append('transaction', this.state.selectedFile)
         if(this.state.selectedFile === null) {
-            alert('Data Tidak Boleh Kosong!')
+           sweet('ALERT','Data Tidak Boleh Kosong!','error')
         } else {
-            Axios.put('http://localhost:2000/product/payment/' + id, fd)
+            Axios.put('http://localhost:2000/product/payment?id=' + id + '&username=' + this.props.user , fd)
             .then((res) => {
                 if(res.data.error) {
                     this.setState({error : res.data.msg})
                 } else {
-                    alert(res.data)
-                    this.refs.input.value = ''
-                    this.setState({selectedFile : null, error : ''})
+                    if(res.data === 'Upload Bukti Pembayaran Berhasil'){
+                        sweet('Success',res.data,'success')
+                        this.refs.input.value = ''
+                        this.setState({selectedFile : null, error : ''})
+                    } else if(res.data === 'TRANSACTION HAS ALREADY DONE. THANK YOU!'){
+                        sweet('ALERT',res.data,'error')
+                    } else if(res.data === "YOU DON'T HAVE THIS TRANSACTION"){
+                        sweet('ALERT',res.data,'error')
+                    }  else {
+                        sweet('ALERT',res.data,'error')
+                    }          
                 }
             })
             .catch((err) => console.log(err))

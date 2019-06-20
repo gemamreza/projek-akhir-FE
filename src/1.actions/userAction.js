@@ -2,14 +2,6 @@ import axios from 'axios';
 import cookie from 'universal-cookie';
 
 const objCookie = new cookie()
-// export const LoginAction = (a) => {
-//     // objCookie.set('userData',a, {path : '/'})
-//     // return {
-//     //     type : 'LOGIN_SUCCESS_USERNAME',
-//     //     payload : a
-//     // }
-   
-// }
 
 export const LoginAction=(username,password)=>{
     return(dispatch)=>{
@@ -67,7 +59,7 @@ export const keepLogin = (cookie) => {
     }
 } 
 
-export const userRegister = (a,b,c,d,e,f) => { // userRegister('fikri')
+export const userRegister = (a,b,c,d,e,f) => {
     return(dispatch)=>{
         dispatch({
             type : 'LOADING'

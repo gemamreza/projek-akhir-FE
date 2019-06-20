@@ -118,7 +118,7 @@ Spesifikasi :
 
 11. Razer Mamba Tournament 
 Gaming Mouse, 16.000 dpi, 5G Laser, USB
-RGB LED, Black
+RGB LED, Black.
 Spesifikasi :
 -DPI : 16.000 dpi
 -Sensor : 5G laser
@@ -129,7 +129,7 @@ Spesifikasi :
 
 12. Steel Series Rival Black
 Gaming Mouse, 200 - 7,200, 100 CPI Increments, Optical, USB
-RGB LED, Black
+RGB LED, Black.
 Spesifikasi :
 -DPI : 200 - 7200 dpi
 -Sensor : Optical
